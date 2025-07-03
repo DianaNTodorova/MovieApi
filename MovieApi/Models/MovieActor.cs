@@ -2,6 +2,7 @@
 {
     public class MovieActor
     {
+        public int Id { get; set; }
         public Movie Movie { get; set; } = null!;
         public Actor Actor { get; set; } = null!;
         public int MovieId { get; set; }
