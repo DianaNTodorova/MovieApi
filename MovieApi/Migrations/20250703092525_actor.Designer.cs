@@ -12,8 +12,8 @@ using MovieApi.Data;
 namespace MovieApi.Migrations
 {
     [DbContext(typeof(MovieApiContext))]
-    [Migration("20250702135449_newseed")]
-    partial class newseed
+    [Migration("20250703092525_actor")]
+    partial class actor
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,13 +28,16 @@ namespace MovieApi.Migrations
             modelBuilder.Entity("MovieApi.Models.Actor", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("BirthYear")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("MovieActorActorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MovieActorMovieId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -42,16 +45,15 @@ namespace MovieApi.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MovieActorMovieId", "MovieActorActorId");
+
                     b.ToTable("Actor");
                 });
 
             modelBuilder.Entity("MovieApi.Models.Movie", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
@@ -114,10 +116,7 @@ namespace MovieApi.Migrations
             modelBuilder.Entity("MovieApi.Models.Review", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -138,6 +137,13 @@ namespace MovieApi.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("MovieApi.Models.Actor", b =>
+                {
+                    b.HasOne("MovieApi.Models.MovieActor", null)
+                        .WithMany("Actors")
+                        .HasForeignKey("MovieActorMovieId", "MovieActorActorId");
                 });
 
             modelBuilder.Entity("MovieApi.Models.MovieActor", b =>
@@ -194,6 +200,11 @@ namespace MovieApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("MovieApi.Models.MovieActor", b =>
+                {
+                    b.Navigation("Actors");
                 });
 #pragma warning restore 612, 618
         }

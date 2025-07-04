@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +16,24 @@ namespace MovieApi.Controllers
     public class MoviesController : ControllerBase
     {
         private readonly MovieApiContext _context;
+        private readonly IMapper _mapper;
 
-        public MoviesController(MovieApiContext context)
+        public MoviesController(MovieApiContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Movies
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovie()
         {
-            return await _context.Movie.ToListAsync();
+            var movie = await _context.Movie
+                .Include(m => m.MovieDetails)
+                .Include(m => m.Reviews)
+                .Include(m => m.Actor).ToListAsync();
+
+            return Ok(movie);
         }
 
         // GET: api/Movies/5
@@ -38,6 +46,7 @@ namespace MovieApi.Controllers
             {
                 return NotFound();
             }
+
 
             return movie;
         }

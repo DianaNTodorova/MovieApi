@@ -5,8 +5,9 @@
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime BirthYear { get; set; }
+    
 
-        public ICollection<MovieActor> MovieActors { get; set; } = new List<MovieActor>();
+        public ICollection<Movie> Movie { get; set; } = new List<Movie>();
 
     }
 }

@@ -21,18 +21,17 @@ namespace MovieApi.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            // preventing creation of Ids
+            modelBuilder.Entity<Movie>().Property(m => m.Id).ValueGeneratedNever();
+            modelBuilder.Entity<Actor>().Property(a => a.Id).ValueGeneratedNever();
+            modelBuilder.Entity<MovieDetails>().Property(md => md.MovieId).ValueGeneratedNever();
+            modelBuilder.Entity<Review>().Property(r => r.Id).ValueGeneratedNever();
+
             // Configure the many-to-many relationship between Movie and Actor
-            modelBuilder.Entity<MovieActor>()
-                .HasKey(ma => new { ma.MovieId, ma.ActorId });
-            modelBuilder.Entity<MovieActor>()
-                .HasOne(ma => ma.Movie)
-                .WithMany(m => m.MovieActors)
-                .HasForeignKey(ma => ma.MovieId);
-            modelBuilder.Entity<MovieActor>()
-                .HasOne(ma => ma.Actor)
-                .WithMany(a => a.MovieActors)
-                .HasForeignKey(ma => ma.ActorId);
+            modelBuilder.Entity<Movie>()
+                .HasMany(a => a.Actor)
+                .WithMany(m => m.Movie);
+          
             // Configure the one-to-one relationship between Movie and MovieDetails
             modelBuilder.Entity<Movie>()
                 .HasOne(m => m.MovieDetails)
@@ -49,7 +48,7 @@ namespace MovieApi.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MovieApi;Trusted_Connection=True;ConnectRetryCount=0");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MovieApiContext;Trusted_Connection=True;ConnectRetryCount=0");
             }
 
         }

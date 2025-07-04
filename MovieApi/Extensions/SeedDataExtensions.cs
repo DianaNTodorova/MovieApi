@@ -8,10 +8,9 @@ public static class SeedDataExtensions
     {
         using var scope = app.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<MovieApiContext>();
-        context.Database.Migrate(); // Applies any pending migrations
+        context.Database.Migrate(); 
 
-        // Seed your data here if needed
-        // Example:
+       
         if (!context.Movie.Any())
         {
             context.Movie.AddRange(
@@ -21,10 +20,13 @@ public static class SeedDataExtensions
         }
         if (!context.Actor.Any())
         {
-            context.Actor.Add(
-            new Actor { Id = 1, Name = "Leonardo DiCaprio", BirthYear = new DateTime(1969, 5, 5) });
+            context.Actor.AddRange(
+            new Actor { Id = 1, Name = "Leonardo DiCaprio", BirthYear = new DateTime(1969, 5, 5) },
+            new Actor { Id = 2, Name = "Leonardo SomeOne", BirthYear = new DateTime(1969, 5, 5) });
             context.SaveChanges();
         }
+       
+       
         if (!context.MovieDetails.Any())
         {
             context.MovieDetails.AddRange(
