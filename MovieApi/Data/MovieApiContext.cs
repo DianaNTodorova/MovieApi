@@ -22,10 +22,10 @@ namespace MovieApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // preventing creation of Ids
-            modelBuilder.Entity<Movie>().Property(m => m.Id).ValueGeneratedNever();
-            modelBuilder.Entity<Actor>().Property(a => a.Id).ValueGeneratedNever();
-            modelBuilder.Entity<MovieDetails>().Property(md => md.MovieId).ValueGeneratedNever();
-            modelBuilder.Entity<Review>().Property(r => r.Id).ValueGeneratedNever();
+            //modelBuilder.Entity<Movie>().Property(m => m.Id).ValueGeneratedNever();
+            //modelBuilder.Entity<Actor>().Property(a => a.Id).ValueGeneratedNever();
+            //modelBuilder.Entity<MovieDetails>().Property(md => md.MovieId).ValueGeneratedNever();
+            //modelBuilder.Entity<Review>().Property(r => r.Id).ValueGeneratedNever();
 
             // Configure the many-to-many relationship between Movie and Actor
             modelBuilder.Entity<Movie>()

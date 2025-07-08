@@ -15,11 +15,14 @@ namespace MovieApi.Models.DTOs
         [Required]
         [Range(100, 300, ErrorMessage = "The duration must be between 100 and 300 minutes")]
         public int Duration { get; set; }
-  
-        public MovieDetailsDto MovieDetails { get; set; } = null!;
 
-        public List<ReviewDto> ReviewDto { get; set; } = new();
-        public List<ActorDto> ActorDto { get; set; } = new();
+        public string Synopsis { get; set; } = string.Empty;
+        public string Language { get; set; } = string.Empty;
+        public int Budget { get; set; }
+
+        //public MovieDetailsDto MovieDetails { get; set; } = null!;
+        //public List<ReviewDto> ReviewDto { get; set; } = new();
+        //public List<ActorDto> ActorDto { get; set; } = new();
 
     }
 }

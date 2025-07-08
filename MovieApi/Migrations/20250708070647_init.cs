@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieApi.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,9 +15,11 @@ namespace MovieApi.Migrations
                 name: "Actor",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthYear = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    BirthYear = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,7 +30,8 @@ namespace MovieApi.Migrations
                 name: "Movie",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Year = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -40,24 +43,23 @@ namespace MovieApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MovieActor",
+                name: "ActorMovie",
                 columns: table => new
                 {
-                    MovieId = table.Column<int>(type: "int", nullable: false),
                     ActorId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    MovieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieActor", x => new { x.MovieId, x.ActorId });
+                    table.PrimaryKey("PK_ActorMovie", x => new { x.ActorId, x.MovieId });
                     table.ForeignKey(
-                        name: "FK_MovieActor_Actor_ActorId",
+                        name: "FK_ActorMovie_Actor_ActorId",
                         column: x => x.ActorId,
                         principalTable: "Actor",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MovieActor_Movie_MovieId",
+                        name: "FK_ActorMovie_Movie_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movie",
                         principalColumn: "Id",
@@ -68,6 +70,8 @@ namespace MovieApi.Migrations
                 name: "MovieDetails",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     Synopsis = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -75,7 +79,7 @@ namespace MovieApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieDetails", x => x.MovieId);
+                    table.PrimaryKey("PK_MovieDetails", x => x.Id);
                     table.ForeignKey(
                         name: "FK_MovieDetails_Movie_MovieId",
                         column: x => x.MovieId,
@@ -88,7 +92,8 @@ namespace MovieApi.Migrations
                 name: "Review",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     MovieId = table.Column<int>(type: "int", nullable: false),
                     ReviewerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -106,9 +111,15 @@ namespace MovieApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieActor_ActorId",
-                table: "MovieActor",
-                column: "ActorId");
+                name: "IX_ActorMovie_MovieId",
+                table: "ActorMovie",
+                column: "MovieId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieDetails_MovieId",
+                table: "MovieDetails",
+                column: "MovieId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Review_MovieId",
@@ -120,7 +131,7 @@ namespace MovieApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MovieActor");
+                name: "ActorMovie");
 
             migrationBuilder.DropTable(
                 name: "MovieDetails");

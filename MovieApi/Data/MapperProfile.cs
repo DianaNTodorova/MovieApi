@@ -4,18 +4,19 @@ using MovieApi.Models.DTOs;
 
 namespace MovieApi.Data
 {
-    public class MapperProfile: Profile
+    public class MapperProfile : Profile
     {
-        public MapperProfile() 
+        public MapperProfile()
         {
-        CreateMap<Movie, MovieDto>()
-            .ForMember(dest => dest.MovieDetails, opt => opt.MapFrom(src => src.MovieDetails))
-            .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews))
-            .ForMember(dest => dest.Actor, opt => opt.MapFrom(src => src.Actor));
+            CreateMap<Movie, MovieDto>()
+                .ForMember(dest => dest.MovieDetails, opt => opt.MapFrom(src => src.MovieDetails))
+                .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews))
+                .ForMember(dest => dest.Actor, opt => opt.MapFrom(src => src.Actor))
+                .ReverseMap();  
 
-        CreateMap<Actor,ActorDto>();
-        CreateMap<MovieDetails, MovieDetailsDto>();
-        CreateMap<Review, ReviewDto>();
+            CreateMap<Actor, ActorDto>().ReverseMap();   
+            CreateMap<MovieDetails, MovieDetailsDto>().ReverseMap();
+            CreateMap<Review, ReviewDto>().ReverseMap();
         }
     }
 }
