@@ -92,19 +92,6 @@ namespace MovieApi.Controllers
         public async Task<ActionResult<MovieDto>> PostMovie(MovieCreateDto movieDto)
         {
             var movie = _mapper.Map<Movie>(movieDto);
-           //var movie = new Movie
-            //{
-               // Title = movieDto.Title,
-               // Year = movieDto.Year,
-               // Duration = movieDto.Duration,
-               // Genre = movieDto.Genre,
-               // MovieDetails = new MovieDetails
-                //{
-                   // Synopsis = movieDto.Synopsis,
-                   // Language = movieDto.Language,
-                   // Budget = movieDto.Budget
-                //}
-            //};  
 
             _context.Movie.Add(movie);
             await _context.SaveChangesAsync();

@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieApi.Data;
 using MovieApi.Models;
+using MovieApi.Models.DTOs;
 
 namespace MovieApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/actors")]
     [ApiController]
     public class ActorsController : ControllerBase
     {
@@ -24,16 +25,18 @@ namespace MovieApi.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Actors
+        // GET: api/actors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Actor>>> GetActor()
+        public async Task<ActionResult<IEnumerable<ActorDto>>> GetActor()
         {
-            return await _context.Actor.ToListAsync();
+            var actors = await _context.Actor.ToListAsync();
+            var actorDtos = _mapper.Map<IEnumerable<ActorDto>>(actors);
+            return Ok(actorDtos);
         }
 
-        // GET: api/Actors/5
+        // GET: api/actors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Actor>> GetActor(int id)
+        public async Task<ActionResult<ActorDto>> GetActor(int id)
         {
             var actor = await _context.Actor.FindAsync(id);
 
@@ -42,19 +45,20 @@ namespace MovieApi.Controllers
                 return NotFound();
             }
 
-            return actor;
+            var actorDto = _mapper.Map<ActorDto>(actor);
+            return Ok(actorDto);
         }
 
-        // PUT: api/Actors/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/actors/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutActor(int id, Actor actor)
+        public async Task<IActionResult> PutActor(int id, ActorDto actorDto)
         {
-            if (id != actor.Id)
+            if (id != actorDto.Id)
             {
                 return BadRequest();
             }
 
+            var actor = _mapper.Map<Actor>(actorDto);
             _context.Entry(actor).State = EntityState.Modified;
 
             try
@@ -76,18 +80,19 @@ namespace MovieApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Actors
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/actors
         [HttpPost]
-        public async Task<ActionResult<Actor>> PostActor(Actor actor)
+        public async Task<ActionResult<ActorDto>> PostActor(ActorDto actorDto)
         {
+            var actor = _mapper.Map<Actor>(actorDto);
             _context.Actor.Add(actor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetActor", new { id = actor.Id }, actor);
+            var createdActorDto = _mapper.Map<ActorDto>(actor);
+            return CreatedAtAction(nameof(GetActor), new { id = actor.Id }, createdActorDto);
         }
 
-        // DELETE: api/Actors/5
+        // DELETE: api/actors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteActor(int id)
         {
