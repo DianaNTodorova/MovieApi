@@ -49,7 +49,6 @@ namespace MovieApi.Controllers
             return Ok(actorDto);
         }
 
-        // PUT: api/actors/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActor(int id, ActorDto actorDto)
         {
@@ -58,8 +57,29 @@ namespace MovieApi.Controllers
                 return BadRequest();
             }
 
-            var actor = _mapper.Map<Actor>(actorDto);
-            _context.Entry(actor).State = EntityState.Modified;
+           
+            var actor = await _context.Actor
+                .Include(a => a.Movie) 
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            if (actor == null)
+            {
+                return NotFound();
+            }
+
+           
+            _mapper.Map(actorDto, actor);
+
+           
+            if (actorDto.MovieIds != null)
+            {
+                // Actor => Movies based on the list of Movie IDs in actorDto
+                var movies = await _context.Movie
+                    .Where(m => actorDto.MovieIds.Contains(m.Id))
+                    .ToListAsync();
+
+                actor.Movie = movies;
+            }
 
             try
             {
@@ -79,6 +99,7 @@ namespace MovieApi.Controllers
 
             return NoContent();
         }
+
 
         // POST: api/actors
         [HttpPost]

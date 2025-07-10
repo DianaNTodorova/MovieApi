@@ -15,6 +15,8 @@
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         //Navigation property for M:N relation
         public ICollection<Actor> Actor { get; set; } = new List<Actor>();
+        public ICollection<MovieActor> MovieActors { get; set; }
+
 
     }
 }

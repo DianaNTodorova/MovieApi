@@ -26,13 +26,12 @@ namespace MovieApi.Data
                 .ForMember(dest => dest.Reviews, opt => opt.Ignore())
                 .ForMember(dest => dest.Actor, opt => opt.Ignore());
 
-            // Map for returning MovieCreateDto 
             CreateMap<Movie, MovieCreateDto>()
                 .ForMember(dest => dest.Synopsis, opt => opt.MapFrom(src => src.MovieDetails.Synopsis))
                 .ForMember(dest => dest.Language, opt => opt.MapFrom(src => src.MovieDetails.Language))
                 .ForMember(dest => dest.Budget, opt => opt.MapFrom(src => src.MovieDetails.Budget));
 
-            // Other entity mappings
+            
             CreateMap<Actor, ActorDto>().ReverseMap();
             CreateMap<MovieDetails, MovieDetailsDto>().ReverseMap();
             CreateMap<Review, ReviewDto>().ReverseMap();

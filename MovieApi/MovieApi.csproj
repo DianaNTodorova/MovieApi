@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\ModelBuilderExtensions.cs" />
-    <Compile Remove="Models\MovieActor.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Model;
 using Microsoft.EntityFrameworkCore;
 using MovieApi.Data;
 using MovieApi.Models;
@@ -56,14 +57,27 @@ namespace MovieApi.Controllers
         // PUT: api/Reviews/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReview(int id, Review review)
+        public async Task<IActionResult> PutReview(int id, ReviewDto reviewDto)
         {
-            if (id != review.Id)
+            if (id != reviewDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(review).State = EntityState.Modified;
+            var review = await _context.Review
+                .Include(m => m.Movie)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            _mapper.Map(reviewDto, review);
+            if(reviewDto.MovieIds !=null)
+            {
+
+                var movies = await _context.Movie
+                    .Where(m => reviewDto.MovieIds.Contains(m.Id))
+                    .ToListAsync();
+                //review.Movie = movies;
+            }
+
 
             try
             {

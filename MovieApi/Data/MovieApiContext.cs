@@ -12,7 +12,8 @@ namespace MovieApi.Data
         public DbSet<Actor> Actor { get; set; } = default!;
         public DbSet<MovieDetails> MovieDetails { get; set; } = default!;
         public DbSet<Review> Review { get; set; } = default!;
-        public DbSet<MovieApi.Models.Movie> Movie { get; set; } = default!;
+        public DbSet<Movie> Movie { get; set; } = default!;
+        public DbSet<MovieActor> MovieActor { get; set; }
 
         public MovieApiContext(DbContextOptions<MovieApiContext> options)
             : base(options)
@@ -42,6 +43,19 @@ namespace MovieApi.Data
                 .HasMany(m => m.Reviews)
                 .WithOne(r => r.Movie)
                 .HasForeignKey(r => r.MovieId);
+
+            modelBuilder.Entity<MovieActor>()
+                .HasKey(ma => new { ma.MovieId, ma.ActorId });  // Composite Key
+
+            modelBuilder.Entity<MovieActor>()
+                .HasOne(ma => ma.Movie)
+                .WithMany(m => m.MovieActors)
+                .HasForeignKey(ma => ma.MovieId);
+
+            modelBuilder.Entity<MovieActor>()
+                .HasOne(ma => ma.Actor)
+                .WithMany(a => a.MovieActors)
+                .HasForeignKey(ma => ma.ActorId);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -10,6 +10,8 @@ namespace MovieApi.Models
         public DateTime BirthYear { get; set; }
         public int MovieId { get; set; }
         public ICollection<Movie> Movie { get; set; } = new List<Movie>();
+        public ICollection<MovieActor> MovieActors { get; set; }
+
 
     }
 }
